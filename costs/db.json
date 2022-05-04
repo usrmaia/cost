@@ -1,8 +1,8 @@
 {
   "projects": [
     {
-      "name": "nome projeto",
-      "budget": "500",
+      "name": "novo projetooo",
+      "budget": "5000",
       "category": {
         "id": "2",
         "name": "Desenvolvimento"
@@ -10,17 +10,6 @@
       "cost": 0,
       "services": [],
       "id": 1
-    },
-    {
-      "name": "aaaaaaaaaa",
-      "budget": "50",
-      "category": {
-        "id": "2",
-        "name": "Desenvolvimento"
-      },
-      "cost": 0,
-      "services": [],
-      "id": 2
     }
   ],
   "categories": [
