@@ -7,6 +7,8 @@ import ProjectForm from "./../projects/ProjectsForm"
 import Message from "./../layout/Message"
 import ServiceForm from "./../service/ServiceForm"
 import { parse, v4 as uuidv4} from "uuid"
+import ServiceCard from "./../service/ServiceCard"
+
 function Project() {
     const { id } = useParams()
     const [project, setProject] = useState([])
@@ -14,6 +16,7 @@ function Project() {
     const [showServiceForm, setShowServiceForm] = useState(false)
     const [message, setMessage] = useState()
     const [type, setType] = useState()
+    const [services, setServices] = useState([])
 
     useEffect(() => {
         setTimeout(() => {
@@ -24,7 +27,10 @@ function Project() {
                 }
             })
                 .then((resp) => resp.json())
-                .then((data) => {setProject(data)})
+                .then((data) => {
+                    setProject(data)
+                    setServices(data.services)
+                })
                 .catch((err) => console.log(err))
         }, 200)
     }, [id])
@@ -48,7 +54,6 @@ function Project() {
             .then((resp) => resp.json())
             .then((data) => {
                 setProject(data)
-                setShowProjectForm(false)
                 setMessage("Projeto atualizado")
                 setType("sucess")
             })
@@ -57,6 +62,7 @@ function Project() {
 
     function createService(project) {
         setMessage("")
+
         const lastService = project.services[project.services.length - 1]
         lastService.id = uuidv4()
         const lastServiceCost = lastService.cost
@@ -80,9 +86,36 @@ function Project() {
             body: JSON.stringify(project)
         })
             .then((resp) => resp.json())
-            .then((data) => {console.log(data)})
+            .then((data) => {setShowServiceForm(false)})
             .catch((err) => console.log(err))
         
+    }
+
+    function removeService(id, cost) {
+        
+        const servicesUpdated = project.services.filter(
+            (service) => service.id !== id
+        )
+
+        const projectUpdated = project
+
+        projectUpdated.services = servicesUpdated
+        projectUpdated.cost = parseFloat(projectUpdated.cost) - parseFloat(cost)
+
+        fetch(`http://localhost:5000/projects/${projectUpdated.id}`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(projectUpdated)
+        })
+            .then((resp) => resp.json())
+            .then((data) => {
+                setProject(projectUpdated)
+                setServices(servicesUpdated)
+                setMessage("Serviço removido com sucesso!")
+            })
+            .catch((err) => console.log(err))
     }
 
     function toggleProjectForm() {
@@ -136,13 +169,26 @@ function Project() {
                                     <ServiceForm 
                                         handleSubmit={createService}
                                         btnText="Adicionar Serviço"
-                                        projectData={project}/>
+                                        projectData={project}
+                                    />
                                 )}
                             </div>
                         </div>
                         <h2>Serviços</h2>
                         <Container customClass="start">
-                            <p>Itens de Serviços</p>
+                            {services.length > 0 &&
+                                services.map((service) => (
+                                    <ServiceCard
+                                        id = {service.id}
+                                        name = {service.name}
+                                        cost = {service.cost}
+                                        description = {service.description}
+                                        key = {service.id}
+                                        handleRemove = {removeService}
+                                    />
+                                ))
+                            }
+                            {services.length === 0 && <p>Não há serviços cadastrados.</p>}
                         </Container>
                     </Container>
                 </div>

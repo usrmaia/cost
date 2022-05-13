@@ -10,6 +10,24 @@
       "cost": 0,
       "services": [],
       "id": 1
+    },
+    {
+      "name": "projeto 3",
+      "budget": "15000",
+      "category": {
+        "id": "2",
+        "name": "Desenvolvimento"
+      },
+      "cost": 2000,
+      "services": [
+        {
+          "name": "Serviço 3",
+          "cost": "2000",
+          "description": "descricaoooooooooooo",
+          "id": "513a5f8b-0eed-412c-8842-a4be31f346c8"
+        }
+      ],
+      "id": 2
     }
   ],
   "categories": [

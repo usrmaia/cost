@@ -1,4 +1,4 @@
-import styles from "./ServiceForm.module.css"
+import styles from "./../projects/ProjectsForm.module.css"
 import {useState} from "react"
 import Input from "../form/Input"
 import SubmitButton from "../form/SubmitButton"
